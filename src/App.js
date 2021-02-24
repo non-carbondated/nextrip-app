@@ -5,10 +5,17 @@ import {
   Route,
   Link
 } from "react-router-dom"
+import {
+  QueryClient,
+  QueryClientProvider,
+} from 'react-query'
+import { ReactQueryDevtools } from 'react-query/devtools'
 import RealTimeDepartures from './components/RealTimeDepartures'
 import { makeStyles } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
 import Button from '@material-ui/core/Button'
+
+const queryClient = new QueryClient()
 
 const useStyles = makeStyles((theme) => ({
   navigation: {
@@ -34,32 +41,35 @@ function App() {
   const classes = useStyles()
 
   return (
-    <Router>
-      <Grid container>
-        <Grid item xs={12}>
-          <nav className={classes.navigation}>
-            <ul>
-              <li>
-                <Link to="/"><Button variant="text">Real Time Departures</Button></Link>
-              </li>
-              <li>
-                <Link to="/about"><Button variant="text">About</Button></Link>
-              </li>
-            </ul>
-          </nav>
+    <QueryClientProvider client={queryClient}>
+      <Router>
+        <Grid container direction="column" spacing={2}>
+          <Grid item xs={12}>
+            <nav className={classes.navigation}>
+              <ul>
+                <li>
+                  <Link to="/"><Button variant="text">Real Time Departures</Button></Link>
+                </li>
+                <li>
+                  <Link to="/about"><Button variant="text">About</Button></Link>
+                </li>
+              </ul>
+            </nav>
+          </Grid>
+          <Grid item xs={12}>
+            <Switch>
+              <Route path="/about">
+                <About />
+              </Route>
+              <Route path="/">
+                <RealTimeDepartures />
+              </Route>
+            </Switch>
+          </Grid>
         </Grid>
-        <Grid item xs={12}>
-          <Switch>
-            <Route path="/about">
-              <About />
-            </Route>
-            <Route path="/">
-              <RealTimeDepartures />
-            </Route>
-          </Switch>
-        </Grid>
-      </Grid>
-    </Router>
+      </Router>
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
   )
 }
 

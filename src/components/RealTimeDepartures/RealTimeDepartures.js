@@ -7,7 +7,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 
 const propTypes = {
   selectedRouteId: PropTypes.string.isRequired,
-  selectedDirectionId: PropTypes.string.isRequired,
+  selectedDirectionId: PropTypes.number.isRequired,
   selectedPlaceCode: PropTypes.string.isRequired,
   routes: PropTypes.array.isRequired,
   directions: PropTypes.array.isRequired,
@@ -29,13 +29,28 @@ const RealTimeDepartures = ({
   onDirectionChange,
   onStopChange
 }) => {
+  const handleRouteChange = (event, newValue) => {
+    if (selectedDirectionId !== -1) {
+      onDirectionChange(-1)
+      onStopChange('')
+    }
+    onRouteChange(newValue?.id)
+  }
+
+  const handleDirectionChange = (event, newValue) => {
+    if (selectedPlaceCode !== '') {
+      onStopChange('')
+    }
+    onDirectionChange(newValue?.id)
+  }
+
   return (
     <Grid
       container
       // direction="column"
       justify="center"
       alignItems="flex-start"
-      spacing="3"
+      spacing={3}
     >
       <Grid item xs={12}>
         <Typography variant="h2">Real Time Departures</Typography>
@@ -44,10 +59,25 @@ const RealTimeDepartures = ({
         <Autocomplete
           id="route"
           options={routes}
-          getOptionLabel={(option) => option.route_label}
+          getOptionLabel={(option) => option.label}
           style={{ width: 300 }}
           renderInput={(params) => <TextField {...params} label="Route" />}
+          onChange={handleRouteChange}
+          disableClearable
         />
+        {selectedRouteId !== '' && (
+          <Autocomplete
+            id="direction"
+            options={directions}
+            getOptionLabel={(option) => option.label}
+            // getOptionSelected={(option, value) => option.id === value.id}
+            style={{ width: 300 }}
+            renderInput={(params) => <TextField {...params} label="Direction" />}
+            value={directions.find(({ id }) => id === selectedDirectionId) || null}
+            onChange={handleDirectionChange}
+            disableClearable
+          />
+        )}
       </Grid>
       <Grid item xs={12} md={6}>
         Table here

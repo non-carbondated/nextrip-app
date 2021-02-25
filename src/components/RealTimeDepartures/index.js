@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useQuery } from 'react-query'
-import { getActiveRoutes, getDirections, getStops } from './RealTimeDepartures.api'
+import { getActiveRoutes, getDirections, getRealTimeDepartures, getStops } from './RealTimeDepartures.api'
 import RealTimeDeparturesUI from './RealTimeDepartures'
 
 const RealTimeDepartures = () => {
@@ -37,6 +37,22 @@ const RealTimeDepartures = () => {
     }
   )
 
+  const realTimeDepartures = useQuery(
+    ['realTimeDepartures', selectedRoute, selectedDirection, selectedStop],
+    () => getRealTimeDepartures(selectedRoute.id, selectedDirection.id, selectedStop.id),
+    {
+      enabled: !!selectedRoute && !!selectedDirection && !!selectedStop,
+      select: data => data === null ? null : ({
+        stop: {
+          id: data?.stops[0].stop_id,
+          description: data?.stops[0].description
+        },
+        departures: data?.departures.map(({ departure_time, departure_text, description, route_short_name, trip_id }) => ({ route: route_short_name, destination: description, departs: departure_text, time: departure_time, tripId: trip_id }))
+      }),
+      initialData: () => null
+    }
+  )
+
   const handleRouteChange = value => setSelectedRoute(value)
 
   const handleDirectionChange = value => setSelectedDirection(value)
@@ -51,7 +67,7 @@ const RealTimeDepartures = () => {
       routes={routes.data}
       directions={directions.data}
       stops={stops.data}
-      realTimeDepartures={[]}
+      realTimeDepartures={realTimeDepartures.data}
       onRouteChange={handleRouteChange}
       onDirectionChange={handleDirectionChange}
       onStopChange={handleStopChange}

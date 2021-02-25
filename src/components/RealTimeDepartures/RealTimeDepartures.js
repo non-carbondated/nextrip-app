@@ -49,6 +49,10 @@ const RealTimeDepartures = ({
     onDirectionChange(newValue)
   }
 
+  const handleStopChange = (event, newValue) => {
+    onStopChange(newValue)
+  }
+
   return (
     <Grid
       container
@@ -66,7 +70,7 @@ const RealTimeDepartures = ({
           options={routes}
           getOptionLabel={(option) => option.label}
           style={{ width: 300 }}
-          renderInput={(params) => <TextField {...params} label="Route" />}
+          renderInput={(params) => <TextField {...params} label="Select route" />}
           onChange={handleRouteChange}
           disableClearable
         />
@@ -75,11 +79,22 @@ const RealTimeDepartures = ({
             id="direction"
             options={directions}
             getOptionLabel={(option) => option.label}
-            // getOptionSelected={(option, value) => option.id === value.id}
             style={{ width: 300 }}
-            renderInput={(params) => <TextField {...params} label="Direction" />}
+            renderInput={(params) => <TextField {...params} label="Select direction" />}
             value={selectedDirection}
             onChange={handleDirectionChange}
+            disableClearable
+          />
+        )}
+        {selectedDirection && (
+          <Autocomplete
+            id="stop"
+            options={stops}
+            getOptionLabel={(option) => option.label}
+            style={{ width: 300 }}
+            renderInput={(params) => <TextField {...params} label="Select stop" />}
+            value={selectedStop}
+            onChange={handleStopChange}
             disableClearable
           />
         )}

@@ -1,17 +1,19 @@
 import { useState } from 'react'
 import { useQuery } from 'react-query'
-import { getActiveRoutes, getDirections } from './RealTimeDepartures.api'
+import { getActiveRoutes, getDirections, getStops } from './RealTimeDepartures.api'
 import RealTimeDeparturesUI from './RealTimeDepartures'
 
 const RealTimeDepartures = () => {
   const [selectedRoute, setSelectedRoute] = useState(null)
   const [selectedDirection, setSelectedDirection] = useState(null)
+  const [selectedStop, setSelectedStop] = useState(null)
 
   const routes = useQuery(
     'routes',
     getActiveRoutes,
     {
-      select: data => data.map(({ route_id, route_label }) => ({ id: route_id, label: route_label }))
+      select: data => data.map(({ route_id, route_label }) => ({ id: route_id, label: route_label })),
+      initialData: () => []
     }  
   )
 
@@ -19,27 +21,40 @@ const RealTimeDepartures = () => {
     ['directions', selectedRoute],
     () => getDirections(selectedRoute.id),
     {
-      enabled: selectedRoute !== null,
-      select: data => data.map(({ direction_id, direction_name}) => ({ id: direction_id, label: direction_name }))
+      enabled: !!selectedRoute,
+      select: data => data.map(({ direction_id, direction_name}) => ({ id: direction_id, label: direction_name })),
+      initialData: () => []
     }
   )
 
-  const handleRouteChange = id => setSelectedRoute(id)
+  const stops = useQuery(
+    ['stops', selectedRoute, selectedDirection],
+    () => getStops(selectedRoute.id, selectedDirection.id),
+    {
+      enabled: !!selectedRoute && !!selectedDirection,
+      select: data => data.map(({ place_code, description}) => ({ id: place_code, label: description })),
+      initialData: () => []
+    }
+  )
 
-  const handleDirectionChange = id => setSelectedDirection(id)
+  const handleRouteChange = value => setSelectedRoute(value)
+
+  const handleDirectionChange = value => setSelectedDirection(value)
+
+  const handleStopChange = value => setSelectedStop(value)
 
   return (
     <RealTimeDeparturesUI
       selectedRoute={selectedRoute}
       selectedDirection={selectedDirection}
-      selectedStop={null}
-      routes={routes.data || []}
-      directions={directions.data || []}
-      stops={[]}
+      selectedStop={selectedStop}
+      routes={routes.data}
+      directions={directions.data}
+      stops={stops.data}
       realTimeDepartures={[]}
       onRouteChange={handleRouteChange}
       onDirectionChange={handleDirectionChange}
-      onStopChange={() => {}}
+      onStopChange={handleStopChange}
     />
   )
 }

@@ -4,8 +4,8 @@ import { getActiveRoutes, getDirections } from './RealTimeDepartures.api'
 import RealTimeDeparturesUI from './RealTimeDepartures'
 
 const RealTimeDepartures = () => {
-  const [selectedRouteId, setSelectedRouteId] = useState('')
-  const [selectedDirectionId, setSelectedDirectionId] = useState(-1)
+  const [selectedRoute, setSelectedRoute] = useState(null)
+  const [selectedDirection, setSelectedDirection] = useState(null)
 
   const routes = useQuery(
     'routes',
@@ -16,23 +16,23 @@ const RealTimeDepartures = () => {
   )
 
   const directions = useQuery(
-    ['directions', selectedRouteId],
-    () => getDirections(selectedRouteId),
+    ['directions', selectedRoute],
+    () => getDirections(selectedRoute.id),
     {
-      enabled: selectedRouteId !== '',
+      enabled: selectedRoute !== null,
       select: data => data.map(({ direction_id, direction_name}) => ({ id: direction_id, label: direction_name }))
     }
   )
 
-  const handleRouteChange = id => setSelectedRouteId(id)
+  const handleRouteChange = id => setSelectedRoute(id)
 
-  const handleDirectionChange = id => setSelectedDirectionId(id)
+  const handleDirectionChange = id => setSelectedDirection(id)
 
   return (
     <RealTimeDeparturesUI
-      selectedRouteId={selectedRouteId}
-      selectedDirectionId={selectedDirectionId}
-      selectedPlaceCode={''}
+      selectedRoute={selectedRoute}
+      selectedDirection={selectedDirection}
+      selectedStop={null}
       routes={routes.data || []}
       directions={directions.data || []}
       stops={[]}

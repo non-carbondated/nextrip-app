@@ -6,9 +6,9 @@ import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 
 const propTypes = {
-  selectedRouteId: PropTypes.string.isRequired,
-  selectedDirectionId: PropTypes.number.isRequired,
-  selectedPlaceCode: PropTypes.string.isRequired,
+  selectedRoute: PropTypes.object,
+  selectedDirection: PropTypes.object,
+  selectedStop: PropTypes.object,
   routes: PropTypes.array.isRequired,
   directions: PropTypes.array.isRequired,
   stops: PropTypes.array.isRequired,
@@ -17,10 +17,15 @@ const propTypes = {
   onDirectionChange: PropTypes.func.isRequired,
   onStopChange: PropTypes.func.isRequired,
 }
+const defaultProps = {
+  selectedRoute: null,
+  selectedDirection: null,
+  selectedStop: null,
+}
 const RealTimeDepartures = ({
-  selectedRouteId,
-  selectedDirectionId,
-  selectedPlaceCode,
+  selectedRoute,
+  selectedDirection,
+  selectedStop,
   routes,
   directions,
   stops,
@@ -30,18 +35,18 @@ const RealTimeDepartures = ({
   onStopChange
 }) => {
   const handleRouteChange = (event, newValue) => {
-    if (selectedDirectionId !== -1) {
-      onDirectionChange(-1)
-      onStopChange('')
+    if (selectedDirection !== null) {
+      onDirectionChange(null)
+      onStopChange(null)
     }
-    onRouteChange(newValue?.id)
+    onRouteChange(newValue)
   }
 
   const handleDirectionChange = (event, newValue) => {
-    if (selectedPlaceCode !== '') {
-      onStopChange('')
+    if (selectedStop !== null) {
+      onStopChange(null)
     }
-    onDirectionChange(newValue?.id)
+    onDirectionChange(newValue)
   }
 
   return (
@@ -65,7 +70,7 @@ const RealTimeDepartures = ({
           onChange={handleRouteChange}
           disableClearable
         />
-        {selectedRouteId !== '' && (
+        {selectedRoute && (
           <Autocomplete
             id="direction"
             options={directions}
@@ -73,7 +78,7 @@ const RealTimeDepartures = ({
             // getOptionSelected={(option, value) => option.id === value.id}
             style={{ width: 300 }}
             renderInput={(params) => <TextField {...params} label="Direction" />}
-            value={directions.find(({ id }) => id === selectedDirectionId) || null}
+            value={selectedDirection}
             onChange={handleDirectionChange}
             disableClearable
           />
@@ -86,6 +91,7 @@ const RealTimeDepartures = ({
     
   )
 }
-RealTimeDepartures.propTypes = propTypes;
+RealTimeDepartures.propTypes = propTypes
+RealTimeDepartures.defaultProps = defaultProps
 
 export default RealTimeDepartures

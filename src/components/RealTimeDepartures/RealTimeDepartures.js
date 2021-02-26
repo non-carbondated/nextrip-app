@@ -12,6 +12,7 @@ import TableHead from '@material-ui/core/TableHead'
 import TableRow from '@material-ui/core/TableRow'
 import TableFooter from '@material-ui/core/TableFooter'
 import Paper from '@material-ui/core/Paper'
+import DepartureBoardIcon from '@material-ui/icons/DepartureBoard'
 
 const propTypes = {
   selectedRoute: PropTypes.object,
@@ -134,13 +135,13 @@ const RealTimeDepartures = ({
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {realTimeDepartures.departures.map(({ route, destination, departs, tripId }) => (
+                  {realTimeDepartures.departures.map(({ route, destination, departs, actual, tripId }) => (
                     <TableRow key={tripId}>
                       <TableCell component="th" scope="row">
                         {route}
                       </TableCell>
                       <TableCell>{destination}</TableCell>
-                      <TableCell align="right">{departs}</TableCell>
+                      <TableCell align="right">{actual ? <DepartureBoardIcon /> : null}{departs}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>

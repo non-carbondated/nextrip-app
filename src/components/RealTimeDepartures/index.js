@@ -42,12 +42,13 @@ const RealTimeDepartures = () => {
     () => getRealTimeDepartures(selectedRoute.id, selectedDirection.id, selectedStop.id),
     {
       enabled: !!selectedRoute && !!selectedDirection && !!selectedStop,
+      refetchInterval: 30000,
       select: data => data === null ? null : ({
         stop: {
           id: data?.stops[0].stop_id,
           description: data?.stops[0].description
         },
-        departures: data?.departures.map(({ departure_time, departure_text, description, route_short_name, trip_id }) => ({ route: route_short_name, destination: description, departs: departure_text, time: departure_time, tripId: trip_id }))
+        departures: data?.departures.map(({ actual, departure_text, description, route_short_name, trip_id }) => ({ route: route_short_name, destination: description, departs: departure_text, actual, tripId: trip_id }))
       }),
       initialData: () => null
     }

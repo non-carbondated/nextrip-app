@@ -10,10 +10,11 @@ import {
   QueryClientProvider,
 } from 'react-query'
 import { ReactQueryDevtools } from 'react-query/devtools'
-import RealTimeDepartures from './components/RealTimeDepartures'
 import { makeStyles } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
 import Button from '@material-ui/core/Button'
+import RealTimeDepartures from './components/RealTimeDepartures'
+import About from './components/About'
 
 const queryClient = new QueryClient()
 
@@ -35,10 +36,6 @@ const useStyles = makeStyles((theme) => ({
     margin: theme.spacing(2)
   }
 }));
-
-function About() {
-  return <h2>About</h2>;
-}
 
 function App() {
   const classes = useStyles()

@@ -1,17 +1,21 @@
 import { useState } from 'react'
 import { useQuery } from 'react-query'
-import { getActiveRoutes, getDirections, getRealTimeDepartures, getStops } from './RealTimeDepartures.api'
+import { getActiveRoutes, getDirections, getRouteRealTimeDepartures, getStops, getStopRealTimeDepartures } from './RealTimeDepartures.api'
 import RealTimeDeparturesUI from './RealTimeDepartures'
 
 const RealTimeDepartures = () => {
   const [selectedRoute, setSelectedRoute] = useState(null)
   const [selectedDirection, setSelectedDirection] = useState(null)
   const [selectedStop, setSelectedStop] = useState(null)
+  const [enteredStopId, setEnteredStopId] = useState('')
+  const [stopIdErrorMessage, setStopIdErrorMessage] = useState('')
+  const searchByRoute = enteredStopId === ''
 
   const routes = useQuery(
     'routes',
     getActiveRoutes,
     {
+      enabled: searchByRoute,
       select: data => data.map(({ route_id, route_label }) => ({ id: route_id, label: route_label })),
       initialData: () => []
     }  
@@ -37,12 +41,37 @@ const RealTimeDepartures = () => {
     }
   )
 
-  const realTimeDepartures = useQuery(
-    ['realTimeDepartures', selectedRoute, selectedDirection, selectedStop],
-    () => getRealTimeDepartures(selectedRoute.id, selectedDirection.id, selectedStop.id),
+  const routeRealTimeDepartures = useQuery(
+    ['routeRealTimeDepartures', selectedRoute, selectedDirection, selectedStop],
+    () => getRouteRealTimeDepartures(selectedRoute.id, selectedDirection.id, selectedStop.id),
     {
       enabled: !!selectedRoute && !!selectedDirection && !!selectedStop,
       refetchInterval: 30000,
+      select: data => data === null ? null : ({
+        stop: {
+          id: data?.stops[0].stop_id,
+          description: data?.stops[0].description
+        },
+        departures: data?.departures.map(({ actual, departure_text, description, route_short_name, trip_id }) => ({ route: route_short_name, destination: description, departs: departure_text, actual, tripId: trip_id }))
+      }),
+      initialData: () => null
+    }
+  )
+
+  const stopRealTimeDepartures = useQuery(
+    ['stopRealTimeDepartures', enteredStopId],
+    () => getStopRealTimeDepartures(enteredStopId),
+    {
+      enabled: !!enteredStopId && stopIdErrorMessage === '',
+      refetchInterval: 30000,
+      retry: false,
+      onError: err => {
+        let message = err.response.data.details
+        if (message !== 'Invalid Stop ID') {
+          message = `Sorry, but stop #${enteredStopId} does not exist. Please try another stop number.`
+        }
+        setStopIdErrorMessage(message)
+      },
       select: data => data === null ? null : ({
         stop: {
           id: data?.stops[0].stop_id,
@@ -60,18 +89,25 @@ const RealTimeDepartures = () => {
 
   const handleStopChange = value => setSelectedStop(value)
 
+  const handleEnteredStopChange = value => {
+    setStopIdErrorMessage('')
+    setEnteredStopId(value)
+  }
+
   return (
     <RealTimeDeparturesUI
       selectedRoute={selectedRoute}
       selectedDirection={selectedDirection}
       selectedStop={selectedStop}
+      stopIdErrorMessage={stopIdErrorMessage}
       routes={routes.data}
       directions={directions.data}
       stops={stops.data}
-      realTimeDepartures={realTimeDepartures.data}
+      realTimeDepartures={searchByRoute ? routeRealTimeDepartures.data : stopRealTimeDepartures.data}
       onRouteChange={handleRouteChange}
       onDirectionChange={handleDirectionChange}
       onStopChange={handleStopChange}
+      onEnteredStopChange={handleEnteredStopChange}
     />
   )
 }

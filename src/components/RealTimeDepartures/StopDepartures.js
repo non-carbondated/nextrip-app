@@ -11,7 +11,6 @@ import TableRow from '@material-ui/core/TableRow'
 import TableFooter from '@material-ui/core/TableFooter'
 import Paper from '@material-ui/core/Paper'
 import { makeStyles } from '@material-ui/core/styles'
-
 import DepartureBoardIcon from '@material-ui/icons/DepartureBoard'
 
 const useStyles = makeStyles((theme) => ({

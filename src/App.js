@@ -30,6 +30,9 @@ const useStyles = makeStyles((theme) => ({
         marginRight: theme.spacing(2),
       }
     }
+  },
+  body: {
+    margin: theme.spacing(2)
   }
 }));
 
@@ -44,7 +47,7 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <Router>
         <Grid container direction="column" spacing={2}>
-          <Grid item xs={12}>
+          <Grid item>
             <nav className={classes.navigation}>
               <ul>
                 <li>
@@ -56,7 +59,7 @@ function App() {
               </ul>
             </nav>
           </Grid>
-          <Grid item xs={12}>
+          <Grid item className={classes.body}>
             <Switch>
               <Route path="/about">
                 <About />

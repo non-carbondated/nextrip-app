@@ -4,15 +4,17 @@ import Typography from '@material-ui/core/Typography'
 import Grid from '@material-ui/core/Grid'
 import TextField from '@material-ui/core/TextField'
 import Autocomplete from '@material-ui/lab/Autocomplete'
-import Table from '@material-ui/core/Table'
-import TableBody from '@material-ui/core/TableBody'
-import TableCell from '@material-ui/core/TableCell'
-import TableContainer from '@material-ui/core/TableContainer'
-import TableHead from '@material-ui/core/TableHead'
-import TableRow from '@material-ui/core/TableRow'
-import TableFooter from '@material-ui/core/TableFooter'
-import Paper from '@material-ui/core/Paper'
-import DepartureBoardIcon from '@material-ui/icons/DepartureBoard'
+import { useTheme } from '@material-ui/core/styles'
+import useMediaQuery from '@material-ui/core/useMediaQuery'
+import { makeStyles } from '@material-ui/core/styles'
+import StopDepartures from './StopDepartures'
+
+const useStyles = makeStyles((theme) => ({
+  input: {
+    padding: theme.spacing(1, 0.5),
+    width: theme.spacing(38),
+  }
+}))
 
 const propTypes = {
   selectedRoute: PropTypes.object,
@@ -44,6 +46,10 @@ const RealTimeDepartures = ({
   onDirectionChange,
   onStopChange
 }) => {
+  const classes = useStyles()
+  const theme = useTheme()
+  const widerThan900 = useMediaQuery(theme.breakpoints.up('md'))
+
   const handleRouteChange = (event, newValue) => {
     if (selectedDirection !== null) {
       onDirectionChange(null)
@@ -63,7 +69,7 @@ const RealTimeDepartures = ({
     onStopChange(newValue)
   }
 
-  console.log({ realTimeDepartures })
+  console.log({ realTimeDepartures, widerThan900 })
   return (
     <Grid
       container
@@ -72,15 +78,21 @@ const RealTimeDepartures = ({
       alignItems="center"
       spacing={5}
     >
-      <Grid item xs={12}>
+      <Grid item>
         <Typography variant="h2">Real Time Departures</Typography>
       </Grid>
-      <Grid item xs={12} md={6}>
+      <Grid
+        container
+        item
+        direction={widerThan900 ? 'row' : 'column'}
+        justify={widerThan900 ? 'center' : 'flex-start'}
+        alignItems={widerThan900 ? 'flex-start' : 'center'}
+      >
         <Autocomplete
           id="route"
           options={routes}
           getOptionLabel={(option) => option.label}
-          style={{ width: 300 }}
+          className={classes.input}
           renderInput={(params) => <TextField {...params} label="Select route" />}
           onChange={handleRouteChange}
           disableClearable
@@ -90,7 +102,7 @@ const RealTimeDepartures = ({
             id="direction"
             options={directions}
             getOptionLabel={(option) => option.label}
-            style={{ width: 300 }}
+            className={classes.input}
             renderInput={(params) => <TextField {...params} label="Select direction" />}
             value={selectedDirection}
             onChange={handleDirectionChange}
@@ -102,7 +114,7 @@ const RealTimeDepartures = ({
             id="stop"
             options={stops}
             getOptionLabel={(option) => option.label}
-            style={{ width: 300 }}
+            className={classes.input}
             renderInput={(params) => <TextField {...params} label="Select stop" />}
             value={selectedStop}
             onChange={handleStopChange}
@@ -110,53 +122,13 @@ const RealTimeDepartures = ({
           />
         )}
       </Grid>
-      <Grid item xs={12} md={6}>
+      <Grid container item justify="center">
         {realTimeDepartures && (
-          <>
-            <Grid container justify="space-between">
-              <Grid item>
-                <Typography variant="h4">
-                  {realTimeDepartures.stop.description}
-                </Typography>
-              </Grid>
-              <Grid item>
-                <Typography variant="h6">
-                  {`Stop #: ${realTimeDepartures.stop.id}`}
-                </Typography>
-              </Grid>
-            </Grid>
-            <TableContainer component={Paper}>
-              <Table aria-label="departures table">
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Route</TableCell>
-                    <TableCell>Destination</TableCell>
-                    <TableCell align="right">Departs</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {realTimeDepartures.departures.map(({ route, destination, departs, actual, tripId }) => (
-                    <TableRow key={tripId}>
-                      <TableCell component="th" scope="row">
-                        {route}
-                      </TableCell>
-                      <TableCell>{destination}</TableCell>
-                      <TableCell align="right">{actual ? <DepartureBoardIcon /> : null}{departs}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-                {realTimeDepartures.departures.length === 0 && (
-                  <TableFooter>
-                    <TableRow>
-                      <TableCell>
-                        <Typography variant="body1">No departures at this time</Typography>
-                      </TableCell>
-                    </TableRow>
-                  </TableFooter>
-                )}
-              </Table>
-            </TableContainer>
-          </>
+          <StopDepartures
+            description={realTimeDepartures.stop.description}
+            id={realTimeDepartures.stop.id}
+            departures={realTimeDepartures.departures}
+          />
         )}
       </Grid>
     </Grid>

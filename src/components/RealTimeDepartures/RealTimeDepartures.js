@@ -18,12 +18,15 @@ import StopDepartures from './StopDepartures'
 const useStyles = makeStyles((theme) => ({
   tabsIndicator: {
     backgroundColor: '#06c',
+    height: '3px',
   },
   tabTextColorPrimary: {
     fontSize: '18px',
     textTransform: 'none',
     color: 'rgb(0, 102, 204)',
-    // backgroundColor: 'rgb(0, 102, 204, 0.25)'
+    '&.Mui-selected': {
+      color: 'rgb(0, 102, 204)',
+    }
   },
   input: {
     margin: theme.spacing(1, 0.5),

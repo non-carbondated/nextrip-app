@@ -16,7 +16,7 @@ import DepartureBoardIcon from '@material-ui/icons/DepartureBoard'
 const useStyles = makeStyles((theme) => ({
   stopDeparturesContainer: {
     width: '100%',
-    maxWidth: theme.spacing(114), // 904px
+    maxWidth: theme.spacing(114),
   },
   tableCellHead: {
     backgroundColor: '#ffd201',
@@ -47,7 +47,7 @@ const StopDepartures = ({
         justify="space-between"
         alignItems="flex-end"  
       >
-        <Grid item>
+        <Grid item style={{ marginRight: '8px' }}>
           <Typography variant="h4">
             {description}
           </Typography>
@@ -62,19 +62,19 @@ const StopDepartures = ({
         <Table aria-label="departures table">
           <TableHead>
             <TableRow>
-              <TableCell className={classes.tableCellHead}>Route</TableCell>
+              <TableCell width={104} className={classes.tableCellHead}>Route</TableCell>
               <TableCell className={classes.tableCellHead}>Destination</TableCell>
-              <TableCell className={classes.tableCellHead} align="right">Departs</TableCell>
+              <TableCell width={104} className={classes.tableCellHead} align="right">Departs</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {departures.map(({ route, destination, departs, actual, tripId }) => (
               <TableRow key={tripId}>
-                <TableCell component="th" scope="row">
+                <TableCell component="th" scope="row" style={{ fontWeight: 700 }}>
                   {route}
                 </TableCell>
                 <TableCell>{destination}</TableCell>
-                <TableCell align="right" className={actual ? classes.actual : null}>{actual ? <DepartureBoardIcon titleAccess="Departure time based on current information from the vehicle" /> : null}{departs}</TableCell>
+                <TableCell align="right" className={actual ? classes.actual : null} style={{ fontWeight: 700 }}>{actual ? <DepartureBoardIcon titleAccess="Departure time based on current information from the vehicle" /> : null}{departs}</TableCell>
               </TableRow>
             ))}
           </TableBody>

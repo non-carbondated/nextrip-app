@@ -1,17 +1,7 @@
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
-import { makeStyles } from '@material-ui/core/styles'
-
-const useStyles = makeStyles(theme => ({
-  container: {
-    width: '100%',
-    maxWidth: theme.spacing(114),
-  }
-}))
 
 const About = () => {
-  const classes = useStyles()
-
   return (
     <Grid
       container
@@ -37,6 +27,20 @@ const About = () => {
         <ul>
           <li>Alert the user when an entered stop number doesn't exist</li>
           <li>Refresh the departure data every 30 seconds</li>
+        </ul>
+
+        <Typography variant="h3" gutterBottom>Packages used</Typography>
+        <ul>
+          <li>react: framework for creating the app</li>
+          <li>react-router-dom: for routing</li>
+          <li>axios: for REST requests</li>
+          <li>react-query: for data retrieval</li>
+          <li>prop-types: for type checking</li>
+          <li>@material-ui/core: for component library</li>
+          <li>@material-ui/icons: for icons</li>
+          <li>@material-ui/lab: for autocomplete</li>
+          <li>@testing-library/react: for testing components</li>
+          <li>msw: for mocking REST request responses</li>
         </ul>
       </Grid>
     </Grid>

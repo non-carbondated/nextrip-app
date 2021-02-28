@@ -8,7 +8,6 @@ import TableCell from '@material-ui/core/TableCell'
 import TableContainer from '@material-ui/core/TableContainer'
 import TableHead from '@material-ui/core/TableHead'
 import TableRow from '@material-ui/core/TableRow'
-import TableFooter from '@material-ui/core/TableFooter'
 import Paper from '@material-ui/core/Paper'
 import { makeStyles } from '@material-ui/core/styles'
 import DepartureBoardIcon from '@material-ui/icons/DepartureBoard'
@@ -19,12 +18,15 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: theme.spacing(114),
   },
   tableCellHead: {
-    backgroundColor: '#ffd201',
+    backgroundColor: theme.palette.secondary.main,
     textTransform: 'uppercase',
   },
   actual: {
-    color: '#06c',
+    color: theme.palette.primary.main,
     fontWeight: '700'
+  },
+  message: {
+    padding: theme.spacing(2),
   }
 }))
 
@@ -78,16 +80,10 @@ const StopDepartures = ({
               </TableRow>
             ))}
           </TableBody>
-          {departures.length === 0 && (
-            <TableFooter>
-              <TableRow>
-                <TableCell>
-                  <Typography variant="body1">No departures at this time</Typography>
-                </TableCell>
-              </TableRow>
-            </TableFooter>
-          )}
         </Table>
+        {departures.length === 0 && (
+          <Typography variant="body1" className={classes.message}>No departures at this time</Typography>
+        )}
       </TableContainer>
     </div>
   )

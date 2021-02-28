@@ -16,21 +16,9 @@ import SearchIcon from '@material-ui/icons/Search'
 import StopDepartures from './StopDepartures'
 
 const useStyles = makeStyles((theme) => ({
-  tabsIndicator: {
-    backgroundColor: '#06c',
-    height: '3px',
-  },
-  tabTextColorPrimary: {
-    fontSize: '18px',
-    textTransform: 'none',
-    color: 'rgb(0, 102, 204)',
-    '&.Mui-selected': {
-      color: 'rgb(0, 102, 204)',
-    }
-  },
   input: {
     margin: theme.spacing(1, 0.5),
-    width: theme.spacing(38),
+    width: theme.spacing(37),
   },
   messageContainer: {
     display: 'flex',
@@ -89,6 +77,7 @@ const RealTimeDepartures = ({
       handleRouteChange({}, null)
     }
     onEnteredStopChange('')
+    setEnteredStopId('')
   }
 
   const handleRouteChange = (event, newValue) => {
@@ -135,7 +124,7 @@ const RealTimeDepartures = ({
       spacing={5}
     >
       <Grid item>
-        <Typography variant="h2" align="center">Real Time Departures</Typography>
+        <Typography variant="h2" align="center">Real time departures</Typography>
       </Grid>
       <Grid item>
         <Tabs
@@ -144,16 +133,9 @@ const RealTimeDepartures = ({
           indicatorColor="primary"
           textColor="primary"
           centered
-          classes={{
-            indicator: classes.tabsIndicator
-          }}
         >
-          <Tab label="By route" classes={{
-            textColorPrimary: classes.tabTextColorPrimary,
-          }} />
-          <Tab label="By stop #" classes={{
-            textColorPrimary: classes.tabTextColorPrimary,
-          }} />
+          <Tab label="By route" />
+          <Tab label="By stop #" />
         </Tabs>
       </Grid>
       <Grid

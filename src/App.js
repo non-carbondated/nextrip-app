@@ -5,12 +5,8 @@ import {
   Route,
   Link
 } from "react-router-dom"
-import {
-  QueryClient,
-  QueryClientProvider,
-} from 'react-query'
-import { ReactQueryDevtools } from 'react-query/devtools'
-import { makeStyles } from '@material-ui/core/styles'
+import { QueryClient, QueryClientProvider } from 'react-query'
+import { createMuiTheme, ThemeProvider, makeStyles } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
 import Button from '@material-ui/core/Button'
 import RealTimeDepartures from './components/RealTimeDepartures'
@@ -18,10 +14,39 @@ import About from './components/About'
 
 const queryClient = new QueryClient()
 
-const useStyles = makeStyles((theme) => ({
+const customTheme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#06c',
+    },
+    secondary: {
+      main: '#ffd201',
+    },
+  },
+  overrides: {
+    MuiTabs: {
+      indicator: {
+        backgroundColor: '#06c',
+        height: '3px',
+      },
+    },
+    MuiTab: {
+      textColorPrimary: {
+        fontSize: '18px',
+        textTransform: 'none',
+        color: 'rgb(0, 102, 204)',
+        '&.Mui-selected': {
+          color: 'rgb(0, 102, 204)',
+        }
+      }
+    }
+  }
+})
+
+const useStyles = makeStyles(theme => ({
   navigation: {
     padding: theme.spacing(1),
-    backgroundColor: '#ffd200',
+    backgroundColor: customTheme.palette.secondary.main,
     '& ul': {
       margin: 0,
       padding: 0,
@@ -43,32 +68,33 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <Router>
-        <Grid container direction="column" spacing={2}>
-          <Grid item>
-            <nav className={classes.navigation}>
-              <ul>
-                <li>
-                  <Link to="/"><Button variant="text">Real Time Departures</Button></Link>
-                </li>
-                <li>
-                  <Link to="/about"><Button variant="text">About</Button></Link>
-                </li>
-              </ul>
-            </nav>
+        <ThemeProvider theme={customTheme}>
+          <Grid container direction="column" spacing={2}>
+            <Grid item>
+              <nav className={classes.navigation}>
+                <ul>
+                  <li>
+                    <Link to="/"><Button variant="text">Real time departures</Button></Link>
+                  </li>
+                  <li>
+                    <Link to="/about"><Button variant="text">About</Button></Link>
+                  </li>
+                </ul>
+              </nav>
+            </Grid>
+            <Grid item className={classes.body}>
+              <Switch>
+                <Route path="/about">
+                  <About />
+                </Route>
+                <Route path="/">
+                  <RealTimeDepartures />
+                </Route>
+              </Switch>
+            </Grid>
           </Grid>
-          <Grid item className={classes.body}>
-            <Switch>
-              <Route path="/about">
-                <About />
-              </Route>
-              <Route path="/">
-                <RealTimeDepartures />
-              </Route>
-            </Switch>
-          </Grid>
-        </Grid>
+        </ThemeProvider>
       </Router>
-      <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   )
 }

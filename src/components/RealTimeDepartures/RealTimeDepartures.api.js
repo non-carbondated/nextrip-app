@@ -8,46 +8,26 @@ const routeRealTimeDeparturesRoute = (routeId, directionId, placeCode) => `${bas
 const stopRealTimeDeparturesRoute = stopId => `${baseRoute}/nextripv2/${stopId}`
 
 export const getActiveRoutes = async () => {
-  try {
-    const { data } = await axios.get(activeRoutesRoute)
-    return data
-  } catch (error) {
-    console.error(error);
-  }
+  const response = await axios.get(activeRoutesRoute)
+  return response.data
 }
 
 export const getDirections = async (routeId) => {
-  try {
-    const { data } = await axios.get(directionsRoute(routeId))
-    return data
-  } catch (error) {
-    console.error(error);
-  }
+  const response = await axios.get(directionsRoute(routeId))
+  return response.data
 }
 
 export const getStops = async (routeId, directionId) => {
-  try {
-    const { data } = await axios.get(timepointStopsRoute(routeId, directionId))
-    return data
-  } catch (error) {
-    console.error(error);
-  }
+  const response = await axios.get(timepointStopsRoute(routeId, directionId))
+  return response.data
 }
 
 export const getRouteRealTimeDepartures = async (routeId, directionId, placeCode) => {
-  try {
-    const { data } = await axios.get(routeRealTimeDeparturesRoute(routeId, directionId, placeCode))
-    return data
-  } catch (error) {
-    console.error(error);
-  }
+  const response = await axios.get(routeRealTimeDeparturesRoute(routeId, directionId, placeCode))
+  return response.data
 }
 
 export const getStopRealTimeDepartures = async stopId => {
-  try {
-    const { data } = await axios.get(stopRealTimeDeparturesRoute(stopId))
-    return data
-  } catch (error) {
-    throw error
-  }
+  const response = await axios.get(stopRealTimeDeparturesRoute(stopId))
+  return response.data
 }

@@ -1,7 +1,25 @@
-# Getting Started with Create React App
+# NexTrip App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+The purpose of this project is to use the Twin Cities  Metro Transit [NexTrip API](https://svc.metrotransit.org/swagger/index.html) to create a web application that provides the following functionality:
 
+**Displaying real time departures by route**
+- Selecting a route from a list of active routes
+- Selecting a direction from a list of directions for the selected route
+- Selecting a stop from a list of available stops for the selected route and direction
+- Refresh the departure data every 30 seconds
+
+**Displaying real time departures by stop number**
+- Alert the user when an entered stop number doesn't exist
+- Refresh the departure data every 30 seconds
+
+## Assumptions made
+- Route, direction and stop API endpoints are trusted to be up
+- Route, direction and stop response data has accurate data
+- A request for departures using an invalid stop number will respond with a 400 error and a response detail property of 'Invalid Stop ID'
+- Departure data should be refreshed every 30 seconds
+- Departure data that is actually being sent from the vehicle should be signified as different from other scheduled departures
+- Component tests assert the desired user experience and not implementation details
+- App should be be used on phone devices and larger (built with responsive web design in mind)
 ## Available Scripts
 
 In the project directory, you can run:

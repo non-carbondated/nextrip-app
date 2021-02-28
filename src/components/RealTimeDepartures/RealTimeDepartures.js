@@ -72,12 +72,14 @@ const RealTimeDepartures = ({
   const enteredStopRef = useRef(null)
 
   const handleTabChange = (event, newValue) => {
-    setTabIndex(newValue)
-    if (selectedRoute !== null) {
-      handleRouteChange({}, null)
+    if (tabIndex !== newValue) {
+      setTabIndex(newValue)
+      if (selectedRoute !== null) {
+        handleRouteChange({}, null)
+      }
+      onEnteredStopChange('')
+      setEnteredStopId('')
     }
-    onEnteredStopChange('')
-    setEnteredStopId('')
   }
 
   const handleRouteChange = (event, newValue) => {
@@ -191,7 +193,7 @@ const RealTimeDepartures = ({
                 endAdornment: (
                   <InputAdornment position="end">
                     <IconButton
-                      aria-label="search by stop number"
+                      aria-label="Search"
                       onClick={handleEnteredStopSearchClick}
                     >
                       <SearchIcon />

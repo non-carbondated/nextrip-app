@@ -62,13 +62,6 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const ButtonLink = React.forwardRef((props, ref) => {
-  const { navigate, ...otherProps } = props
-  return (
-    <Button variant="text" ref={ref} {...otherProps}>{props.children}</Button>
-  )
-})
-
 function App() {
   const classes = useStyles()
     
@@ -81,10 +74,10 @@ function App() {
               <nav className={classes.navigation}>
                 <ul>
                   <li>
-                    <Link to="/" component={ButtonLink}>Real time departures</Link>
+                    <Link to="/" className="MuiButtonBase-root MuiButton-root MuiButton-text">Real time departures</Link>
                   </li>
                   <li>
-                    <Link to="/about" component={ButtonLink}>About</Link>
+                    <Link to="/about" className="MuiButtonBase-root MuiButton-root MuiButton-text">About</Link>
                   </li>
                 </ul>
               </nav>

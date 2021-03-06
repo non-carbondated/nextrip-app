@@ -62,9 +62,16 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+const ButtonLink = React.forwardRef((props, ref) => {
+  const { navigate, ...otherProps } = props
+  return (
+    <Button variant="text" ref={ref} {...otherProps}>{props.children}</Button>
+  )
+})
+
 function App() {
   const classes = useStyles()
-
+    
   return (
     <QueryClientProvider client={queryClient}>
       <Router>
@@ -74,10 +81,10 @@ function App() {
               <nav className={classes.navigation}>
                 <ul>
                   <li>
-                    <Link to="/"><Button variant="text">Real time departures</Button></Link>
+                    <Link to="/" component={ButtonLink}>Real time departures</Link>
                   </li>
                   <li>
-                    <Link to="/about"><Button variant="text">About</Button></Link>
+                    <Link to="/about" component={ButtonLink}>About</Link>
                   </li>
                 </ul>
               </nav>
